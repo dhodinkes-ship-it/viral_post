@@ -1,9 +1,9 @@
 
 import React, { useState, useRef } from 'react';
-import { VideoMetadata, AnalysisState } from './types';
-import { analyzeContent } from './services/geminiService';
-import { CircularScore } from './components/CircularScore';
-import { TimelineVisualizer } from './components/TimelineVisualizer';
+import { VideoMetadata, AnalysisState } from './types.ts';
+import { analyzeContent } from './services/geminiService.ts';
+import { CircularScore } from './components/CircularScore.tsx';
+import { TimelineVisualizer } from './components/TimelineVisualizer.tsx';
 import { 
   Upload, 
   Link as LinkIcon, 
@@ -74,9 +74,17 @@ const App: React.FC = () => {
 
     try {
       // Simulate steps for better UX
-      setTimeout(() => setState(prev => ({ ...prev, progress: 20, statusText: isUrl ? 'Mengambil data real-time dari platform...' : 'Membedah struktur metadata...' })), 800);
-      setTimeout(() => setState(prev => ({ ...prev, progress: 45, statusText: 'Mengevaluasi tren niche terbaru...' })), 2000);
-      setTimeout(() => setState(prev => ({ ...prev, progress: 70, statusText: 'Menyusun rencana aksi viralitas...' })), 3500);
+      const progressSteps = [
+        { p: 20, s: isUrl ? 'Mengambil data real-time dari platform...' : 'Membedah struktur metadata...' },
+        { p: 45, s: 'Mengevaluasi tren niche terbaru...' },
+        { p: 70, s: 'Menyusun rencana aksi viralitas...' }
+      ];
+
+      progressSteps.forEach((step, i) => {
+        setTimeout(() => {
+          setState(prev => prev.isAnalyzing ? { ...prev, progress: step.p, statusText: step.s } : prev);
+        }, (i + 1) * 1000);
+      });
       
       const report = await analyzeContent(metadata, thumbnailPreview || undefined);
 
@@ -88,11 +96,11 @@ const App: React.FC = () => {
         error: null
       });
     } catch (err: any) {
-      console.error(err);
+      console.error(reportError);
       setState(prev => ({ 
         ...prev, 
         isAnalyzing: false, 
-        error: "Analisis gagal. Pastikan API Key tersedia dan URL valid." 
+        error: "Analisis gagal. Pastikan API Key tersedia dan URL dapat diakses oleh Google Search." 
       }));
     }
   };

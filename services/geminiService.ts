@@ -1,6 +1,6 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { VideoMetadata, ViralityReport } from "../types";
+import { VideoMetadata, ViralityReport } from "../types.ts";
 
 const REPORT_SCHEMA = {
   type: Type.OBJECT,
@@ -94,39 +94,29 @@ export async function analyzeContent(
 ): Promise<ViralityReport> {
   const isUrl = metadata.title.toLowerCase().startsWith('http');
   
-  // Rule: Always create fresh instance for API call
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
 
   const prompt = `
-    VIRALVANTAGE ENGINE PROMPT:
+    VIRALVANTAGE ENGINE ANALYTICS:
     
-    User Input: ${metadata.title}
-    Target Platform: ${metadata.platform}
+    Target: ${metadata.platform}
     Niche: ${metadata.niche}
-    User Description: ${metadata.description || 'N/A'}
-
-    ${isUrl ? `
-    DETECTION: This is a URL.
-    TASK: Use 'googleSearch' tool to find the ACTUAL details of this video.
-    Look for:
-    1. Exact Title & Creator Name.
-    2. Video Duration.
-    3. Content Summary (Hook, Body, CTA).
-    4. Comment sentiment & current view count if possible.
+    User Input: ${metadata.title}
     
-    Analyze the REAL video found from the web.
+    ${isUrl ? `
+    ACTION: Use the 'googleSearch' tool to find the ACTUAL details of this video link.
+    You MUST identify:
+    1. Exact Title of the video.
+    2. The creator's name.
+    3. Content summary and length.
+    4. Sentiment of the top comments and current view/like stats if available.
+    
+    Then, evaluate its virality based on this REAL data.
     ` : `
-    DETECTION: This is a content draft/title.
-    TASK: Evaluate the potential of this draft within the ${metadata.niche} niche.
+    ACTION: Evaluate this content draft or title for potential virality.
     `}
 
-    EVALUATION MATRIX:
-    - METADATA: SEO performance, keyword density.
-    - THUMBNAIL: Visual hook potential (if image provided).
-    - VIDEO STRUCTURE: Predict retention based on typical ${metadata.platform} patterns.
-    - TREND: Correlation with current viral hashtags/topics.
-
-    Return the analysis in a structured JSON format according to the provided schema.
+    Return the analysis as a JSON object matching the provided schema.
   `;
 
   const contents: any[] = [{ text: prompt }];
@@ -151,7 +141,7 @@ export async function analyzeContent(
   });
 
   if (!response.text) {
-    throw new Error("AI did not return a valid report string.");
+    throw new Error("Gagal mendapatkan respons dari AI.");
   }
 
   return JSON.parse(response.text);
