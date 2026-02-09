@@ -1,0 +1,7 @@
+{
+  "name": "ViralVantage: Creator Analytics Engine",
+  "description": "An all-in-one creator platform that transforms raw video content into actionable virality insights. One input, one score, and a complete action plan for maximum growth.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
