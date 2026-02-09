@@ -1,9 +1,9 @@
 
 import React, { useState, useRef } from 'react';
-import { VideoMetadata, AnalysisState } from './types';
-import { analyzeContent } from './services/geminiService';
-import { CircularScore } from './components/CircularScore';
-import { TimelineVisualizer } from './components/TimelineVisualizer';
+import { VideoMetadata, AnalysisState } from './types.ts';
+import { analyzeContent } from './services/geminiService.ts';
+import { CircularScore } from './components/CircularScore.tsx';
+import { TimelineVisualizer } from './components/TimelineVisualizer.tsx';
 import { 
   BarChart3, 
   Upload, 

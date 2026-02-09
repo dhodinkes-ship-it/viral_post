@@ -1,6 +1,6 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { VideoMetadata, ViralityReport } from "../types";
+import { VideoMetadata, ViralityReport } from "../types.ts";
 
 const REPORT_SCHEMA = {
   type: Type.OBJECT,
