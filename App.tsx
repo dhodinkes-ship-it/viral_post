@@ -136,11 +136,11 @@ const App: React.FC = () => {
         {!state.report && !state.isAnalyzing ? (
           <div className="max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="text-center mb-12">
-              <h1 className="text-5xl md:text-6xl font-outfit font-extrabold mb-6 bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent leading-tight">
+              <h1 className="text-4xl md:text-6xl font-outfit font-extrabold mb-6 bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent leading-tight">
                 Analisa Link Apapun.<br />Kuasai Algoritma.
               </h1>
               <p className="text-lg text-slate-400 max-w-xl mx-auto font-light leading-relaxed">
-                Tempelkan URL video Anda. Kami akan mengambil data asli dan memberi tahu Anda strategi viralitasnya.
+                Tempelkan URL video Anda. Kami akan mengambil data asli dan memberi tahu Anda strategi viralitasnya secara akurat.
               </p>
             </div>
 
@@ -245,10 +245,11 @@ const App: React.FC = () => {
           </div>
         ) : state.report && (
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
+            {/* Hasil Dashboard */}
             <div className="flex flex-col md:flex-row items-center gap-12 glass-card p-10 rounded-3xl relative overflow-hidden">
                <div className="absolute top-0 right-0 p-4">
                  <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 px-3 py-1 rounded-full text-[10px] font-bold text-green-400 uppercase tracking-widest">
-                   <Globe size={10} /> Verified Data
+                   <Globe size={10} /> Data Terverifikasi
                  </div>
                </div>
               <CircularScore score={state.report.overallScore} size={200} />
