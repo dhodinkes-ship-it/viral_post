@@ -7,7 +7,7 @@
     <title>ViralVantage - Analytics Engine</title>
     
     <script>
-      // Inisialisasi shim process.env segera mungkin untuk mencegah ReferenceError pada library yang mengandalkannya
+      // Inisialisasi shim process.env segera mungkin
       window.process = { env: { API_KEY: "" } };
     </script>
 
@@ -59,7 +59,7 @@
 </head>
   <body>
     <div id="root"></div>
-    <!-- Script tag index.tsx dihapus karena platform mengimpor entry point secara otomatis -->
+    <!-- Platform secara otomatis mengimpor index.tsx sebagai ES module -->
   <script type="module" src="/index.tsx"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { VideoMetadata, ViralityReport } from "../types.ts";
+import { VideoMetadata, ViralityReport } from "../types";
 
 const REPORT_SCHEMA = {
   type: Type.OBJECT,
@@ -92,30 +92,41 @@ export async function analyzeContent(
   metadata: VideoMetadata,
   thumbnailBase64?: string
 ): Promise<ViralityReport> {
-  const isUrl = metadata.title.startsWith('http');
+  const isUrl = metadata.title.toLowerCase().startsWith('http');
   
-  // Rule: Create instance right before API call
+  // Rule: Always create fresh instance for API call
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
 
   const prompt = `
-    IMPORTANT: The user has provided ${isUrl ? `a URL: ${metadata.title}` : `the following title: ${metadata.title}`}.
+    VIRALVANTAGE ENGINE PROMPT:
     
-    ${isUrl ? `ACTION REQUIRED: Use Google Search to find the ACTUAL details of this video (YouTube/TikTok/Instagram). Identify the creator, the exact title, the content of the video, and its current performance if available.` : ''}
+    User Input: ${metadata.title}
+    Target Platform: ${metadata.platform}
+    Niche: ${metadata.niche}
+    User Description: ${metadata.description || 'N/A'}
 
-    Analyze this content for virality potential on ${metadata.platform}.
+    ${isUrl ? `
+    DETECTION: This is a URL.
+    TASK: Use 'googleSearch' tool to find the ACTUAL details of this video.
+    Look for:
+    1. Exact Title & Creator Name.
+    2. Video Duration.
+    3. Content Summary (Hook, Body, CTA).
+    4. Comment sentiment & current view count if possible.
     
-    Current provided Metadata:
-    - Title/URL: ${metadata.title}
-    - User's Description: ${metadata.description || 'Not provided'}
-    - Target Niche: ${metadata.niche}
-    
-    Evaluation Criteria:
-    1. Metadata Accuracy: If a URL was provided, your analysis MUST reflect the actual video content found via search.
-    2. CTR & Hooks: Analyze the title and hook's emotional trigger.
-    3. Trend Match: Compare the content against current viral patterns in the ${metadata.niche} niche.
-    4. Action Plan: Provide 5 specific, high-impact tasks to increase reach.
+    Analyze the REAL video found from the web.
+    ` : `
+    DETECTION: This is a content draft/title.
+    TASK: Evaluate the potential of this draft within the ${metadata.niche} niche.
+    `}
 
-    Return a valid JSON response according to the schema.
+    EVALUATION MATRIX:
+    - METADATA: SEO performance, keyword density.
+    - THUMBNAIL: Visual hook potential (if image provided).
+    - VIDEO STRUCTURE: Predict retention based on typical ${metadata.platform} patterns.
+    - TREND: Correlation with current viral hashtags/topics.
+
+    Return the analysis in a structured JSON format according to the provided schema.
   `;
 
   const contents: any[] = [{ text: prompt }];
@@ -140,7 +151,7 @@ export async function analyzeContent(
   });
 
   if (!response.text) {
-    throw new Error("Empty response from AI engine");
+    throw new Error("AI did not return a valid report string.");
   }
 
   return JSON.parse(response.text);
