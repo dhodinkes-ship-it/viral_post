@@ -2,8 +2,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { VideoMetadata, ViralityReport } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
-
 const REPORT_SCHEMA = {
   type: Type.OBJECT,
   properties: {
@@ -96,6 +94,9 @@ export async function analyzeContent(
 ): Promise<ViralityReport> {
   const isUrl = metadata.title.startsWith('http');
   
+  // Rule: Create instance right before API call
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+
   const prompt = `
     IMPORTANT: The user has provided ${isUrl ? `a URL: ${metadata.title}` : `the following title: ${metadata.title}`}.
     
@@ -137,6 +138,10 @@ export async function analyzeContent(
       responseSchema: REPORT_SCHEMA,
     }
   });
+
+  if (!response.text) {
+    throw new Error("Empty response from AI engine");
+  }
 
   return JSON.parse(response.text);
 }

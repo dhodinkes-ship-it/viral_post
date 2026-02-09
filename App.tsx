@@ -1,9 +1,9 @@
 
 import React, { useState, useRef } from 'react';
-import { VideoMetadata, AnalysisState } from './types.ts';
-import { analyzeContent } from './services/geminiService.ts';
-import { CircularScore } from './components/CircularScore.tsx';
-import { TimelineVisualizer } from './components/TimelineVisualizer.tsx';
+import { VideoMetadata, AnalysisState } from './types';
+import { analyzeContent } from './services/geminiService';
+import { CircularScore } from './components/CircularScore';
+import { TimelineVisualizer } from './components/TimelineVisualizer';
 import { 
   BarChart3, 
   Upload, 
@@ -116,7 +116,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen pb-20">
+    <div className="min-h-screen pb-20 bg-[#050505] text-white">
       <nav className="border-b border-white/10 px-6 py-4 flex justify-between items-center glass-card sticky top-0 z-50">
         <div className="flex items-center gap-2">
           <div className="bg-indigo-600 p-2 rounded-lg">
@@ -183,7 +183,7 @@ const App: React.FC = () => {
                         name="platform"
                         value={metadata.platform}
                         onChange={handleInputChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white appearance-none"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white appearance-none bg-slate-900"
                       >
                         <option value="TikTok">TikTok</option>
                         <option value="YouTube">YouTube</option>
@@ -196,7 +196,7 @@ const App: React.FC = () => {
                         name="niche"
                         value={metadata.niche}
                         onChange={handleInputChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white appearance-none"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white appearance-none bg-slate-900"
                       >
                         <option value="Entertainment">Entertainment</option>
                         <option value="Education">Education</option>
@@ -245,7 +245,6 @@ const App: React.FC = () => {
           </div>
         ) : state.report && (
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
-            {/* Hasil Dashboard */}
             <div className="flex flex-col md:flex-row items-center gap-12 glass-card p-10 rounded-3xl relative overflow-hidden">
                <div className="absolute top-0 right-0 p-4">
                  <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 px-3 py-1 rounded-full text-[10px] font-bold text-green-400 uppercase tracking-widest">
@@ -274,9 +273,6 @@ const App: React.FC = () => {
                 <div className="flex gap-4">
                   <button onClick={reset} className="bg-white/5 border border-white/10 px-6 py-3 rounded-xl text-slate-300 font-bold flex items-center gap-2 hover:bg-white/10 transition">
                     <RefreshCcw size={18} /> Analisis Baru
-                  </button>
-                  <button className="bg-indigo-600 px-6 py-3 rounded-xl text-white font-bold flex items-center gap-2 hover:bg-indigo-500 transition shadow-lg">
-                    <Sparkles size={18} /> Pelajari Optimasi
                   </button>
                 </div>
               </div>
