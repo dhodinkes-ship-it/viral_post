@@ -11,6 +11,7 @@
       window.process = { env: { API_KEY: "" } };
     </script>
 
+    <link rel="stylesheet" href="index.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,6 +59,8 @@
 </head>
   <body>
     <div id="root"></div>
+    <!-- Penambahan script type module secara eksplisit untuk memastikan App dimuat di berbagai host -->
+    <script type="module" src="index.tsx"></script>
   <script type="module" src="/index.tsx"></script>
 </body>
 </html>
