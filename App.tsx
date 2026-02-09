@@ -1,9 +1,9 @@
 
-import React, { useState, useRef, useCallback } from 'react';
-import { VideoMetadata, AnalysisState, ViralityReport } from './types';
-import { analyzeContent } from './services/geminiService';
-import { CircularScore } from './components/CircularScore';
-import { TimelineVisualizer } from './components/TimelineVisualizer';
+import React, { useState, useRef } from 'react';
+import { VideoMetadata, AnalysisState } from './types.ts';
+import { analyzeContent } from './services/geminiService.ts';
+import { CircularScore } from './components/CircularScore.tsx';
+import { TimelineVisualizer } from './components/TimelineVisualizer.tsx';
 import { 
   BarChart3, 
   Upload, 
@@ -58,7 +58,7 @@ const App: React.FC = () => {
 
   const runAnalysis = async () => {
     if (!metadata.title.trim()) {
-      setState(prev => ({ ...prev, error: "Please enter a Video Title or URL" }));
+      setState(prev => ({ ...prev, error: "Silakan masukkan Judul atau URL Video" }));
       return;
     }
 
@@ -67,38 +67,33 @@ const App: React.FC = () => {
     setState({
       isAnalyzing: true,
       progress: 5,
-      statusText: isUrl ? 'Initiating URL Grounding...' : 'Initializing Analysis...',
+      statusText: isUrl ? 'Menginisialisasi URL Grounding...' : 'Memulai Analisis...',
       report: null,
       error: null
     });
 
     try {
-      // Step 1: Deep Fetch (if URL)
       if (isUrl) {
-        setState(prev => ({ ...prev, progress: 25, statusText: 'Fetching original metadata from web...' }));
+        setState(prev => ({ ...prev, progress: 25, statusText: 'Mengambil metadata asli dari web...' }));
       } else {
-        setState(prev => ({ ...prev, progress: 25, statusText: 'Parsing Metadata & Triggers...' }));
+        setState(prev => ({ ...prev, progress: 25, statusText: 'Menganalisis Metadata & Trigger...' }));
       }
       
-      // Artificial delay for UX "Deep Processing" feel
       await new Promise(r => setTimeout(r, 1200));
-
-      // Step 2: Visual & Trend Analysis
-      setState(prev => ({ ...prev, progress: 50, statusText: 'Evaluating niche-specific viral patterns...' }));
+      setState(prev => ({ ...prev, progress: 50, statusText: 'Mengevaluasi pola viralitas niche...' }));
       
-      // Step 3: Call Gemini with Google Search enabled
       const report = await analyzeContent(metadata, thumbnailPreview || undefined);
 
       setState({
         isAnalyzing: false,
         progress: 100,
-        statusText: 'Analysis Complete!',
+        statusText: 'Analisis Selesai!',
         report,
         error: null
       });
     } catch (err: any) {
       console.error(err);
-      setState(prev => ({ ...prev, isAnalyzing: false, error: "AI Engine failed to retrieve data. Please check the URL and try again." }));
+      setState(prev => ({ ...prev, isAnalyzing: false, error: "Gagal mengambil data. Pastikan URL benar atau coba lagi nanti." }));
     }
   };
 
@@ -131,7 +126,7 @@ const App: React.FC = () => {
         </div>
         <div className="flex items-center gap-6">
           <div className="hidden md:flex items-center gap-4 text-xs text-slate-500 font-bold uppercase tracking-widest">
-            <span className="flex items-center gap-1"><Globe size={12} className="text-green-500" /> Search Grounding Active</span>
+            <span className="flex items-center gap-1"><Globe size={12} className="text-green-500" /> Search Grounding Aktif</span>
           </div>
           <div className="w-8 h-8 rounded-full bg-slate-800 border border-white/20" />
         </div>
@@ -142,10 +137,10 @@ const App: React.FC = () => {
           <div className="max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="text-center mb-12">
               <h1 className="text-5xl md:text-6xl font-outfit font-extrabold mb-6 bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent leading-tight">
-                Analyze Any Link.<br />Master the Algorithm.
+                Analisa Link Apapun.<br />Kuasai Algoritma.
               </h1>
               <p className="text-lg text-slate-400 max-w-xl mx-auto font-light leading-relaxed">
-                Paste your video URL. We'll fetch the real data and tell you exactly why it's not going viral yet.
+                Tempelkan URL video Anda. Kami akan mengambil data asli dan memberi tahu Anda strategi viralitasnya.
               </p>
             </div>
 
@@ -168,7 +163,7 @@ const App: React.FC = () => {
 
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <label className="text-xs uppercase tracking-widest text-slate-500 font-bold ml-1">Paste URL (YouTube, TikTok, or IG)</label>
+                    <label className="text-xs uppercase tracking-widest text-slate-500 font-bold ml-1">Tempel URL (YouTube, TikTok, atau IG)</label>
                     <div className="relative">
                       <input 
                         name="title"
@@ -196,7 +191,7 @@ const App: React.FC = () => {
                       </select>
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs uppercase tracking-widest text-slate-500 font-bold ml-1">Content Niche</label>
+                      <label className="text-xs uppercase tracking-widest text-slate-500 font-bold ml-1">Niche Konten</label>
                       <select 
                         name="niche"
                         value={metadata.niche}
@@ -224,15 +219,11 @@ const App: React.FC = () => {
                   onClick={runAnalysis}
                   className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg transition-all transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-2"
                 >
-                  Analyze Video
+                  Analisis Video
                   <ArrowRight size={18} />
                 </button>
               </div>
             </div>
-            
-            <p className="text-center mt-6 text-slate-500 text-[10px] uppercase tracking-[0.2em]">
-              Precision Analytics grounded by Google Search
-            </p>
           </div>
         ) : state.isAnalyzing ? (
           <div className="max-w-xl mx-auto text-center space-y-8 pt-20">
@@ -264,9 +255,9 @@ const App: React.FC = () => {
               
               <div className="flex-1 space-y-6">
                 <div>
-                  <h2 className="text-3xl font-outfit font-bold mb-2">Analysis Complete</h2>
+                  <h2 className="text-3xl font-outfit font-bold mb-2">Analisis Selesai</h2>
                   <p className="text-slate-400 leading-relaxed max-w-2xl">
-                    We've scanned the provided source. Based on your content's structure and current market trends in <span className="text-white font-bold">{metadata.niche}</span>, you are ready for growth.
+                    Berdasarkan struktur konten Anda dan tren di <span className="text-white font-bold">{metadata.niche}</span>, berikut adalah laporannya.
                   </p>
                 </div>
                 
@@ -281,10 +272,10 @@ const App: React.FC = () => {
 
                 <div className="flex gap-4">
                   <button onClick={reset} className="bg-white/5 border border-white/10 px-6 py-3 rounded-xl text-slate-300 font-bold flex items-center gap-2 hover:bg-white/10 transition">
-                    <RefreshCcw size={18} /> New Analysis
+                    <RefreshCcw size={18} /> Analisis Baru
                   </button>
                   <button className="bg-indigo-600 px-6 py-3 rounded-xl text-white font-bold flex items-center gap-2 hover:bg-indigo-500 transition shadow-lg">
-                    <Sparkles size={18} /> Optimization Plan
+                    <Sparkles size={18} /> Pelajari Optimasi
                   </button>
                 </div>
               </div>
@@ -313,7 +304,7 @@ const App: React.FC = () => {
                 <div className="glass-card p-8 rounded-3xl">
                   <h3 className="text-xl font-outfit font-bold flex items-center gap-2 mb-6">
                     <PlayCircle className="text-indigo-400" />
-                    Retention Timeline
+                    Timeline Retensi
                   </h3>
                   <TimelineVisualizer issues={state.report.timelineIssues} />
                 </div>
@@ -321,11 +312,11 @@ const App: React.FC = () => {
                 <div className="glass-card p-8 rounded-3xl">
                   <h3 className="text-xl font-outfit font-bold flex items-center gap-2 mb-6">
                     <Sparkles className="text-purple-400" />
-                    Content Optimization
+                    Optimasi Konten
                   </h3>
                   <div className="space-y-6">
                     <div className="p-5 rounded-2xl bg-white/5 border border-white/5">
-                      <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Grounding-Enhanced Titles</h4>
+                      <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Saran Judul Viral</h4>
                       <ul className="space-y-3">
                         {state.report.generatedAssets.alternativeTitles.map((t, i) => (
                           <li key={i} className="text-sm text-slate-200 flex items-center gap-3">
@@ -341,7 +332,7 @@ const App: React.FC = () => {
               <div className="glass-card p-8 rounded-3xl border-t-4 border-t-indigo-500">
                 <h3 className="text-xl font-outfit font-bold flex items-center gap-2 mb-6">
                   <CheckCircle2 className="text-green-400" />
-                  Priority Roadmap
+                  Roadmap Prioritas
                 </h3>
                 <div className="space-y-6">
                   {state.report.actionPlan.map((plan, idx) => (
